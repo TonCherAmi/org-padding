@@ -52,4 +52,6 @@
         (font-lock-remove-keywords nil keyword)
         (font-lock-fontify-buffer)))))
 
+(provide 'org-padded-headings)
+
 ;;; org-padded-headings.el ends here
