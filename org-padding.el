@@ -1,7 +1,7 @@
-;;; org-padded-headings.el --- Pad headings in org-mode
+;;; org-padding.el --- Pad headings in org-mode
 ;;; Version: 0.0.1
 ;;; Author: TonCherAmi
-;;; URL: https://github.com/TonCherAmi/org-padded-headings
+;;; URL: https://github.com/TonCherAmi/org-padding
 
 ;; This file is NOT part of GNU Emacs.
 ;;
@@ -22,11 +22,11 @@
 
 ;;; Code:
 
-(defvar org-padded-headings-padding-alist
+(defvar org-padding-heading-padding-alist
   '((nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil)))
 
-(define-minor-mode org-padded-headings-mode
-  "Padded headings for org-mode"
+(define-minor-mode org-padding-mode
+  "Padding for org-mode"
   nil nil nil
   (let* ((keyword
           `((".*\\($\\)"
@@ -38,12 +38,12 @@
              (2 (let* ((level (- (match-end 1) (match-beginning 1)))
                        (start (match-beginning 2))
                        (end (1+ (match-end 2)))
-                       (pair (nth (1- level) org-padded-headings-padding-alist)))
+                       (pair (nth (1- level) org-padding-heading-padding-alist)))
                   (put-text-property start end 'rear-nonsticky t)
                   (put-text-property start end 'line-height (car pair))
                   (put-text-property start end 'line-spacing (cdr pair))
                   nil))))))
-    (if org-padded-headings-mode
+    (if org-padding-mode
       (progn
         (font-lock-add-keywords nil keyword)
         (font-lock-fontify-buffer))
@@ -52,6 +52,6 @@
         (font-lock-remove-keywords nil keyword)
         (font-lock-fontify-buffer)))))
 
-(provide 'org-padded-headings)
+(provide 'org-padding)
 
-;;; org-padded-headings.el ends here
+;;; org-padding.el ends here
