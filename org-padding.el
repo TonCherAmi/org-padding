@@ -27,23 +27,44 @@
   "An alist where CAR of an item represents top heading padding
 and CDR of an item represents bottom heading padding")
 
+(defvar org-padding-block-begin-line-padding '(nil . nil)
+  "A pair where CAR represents top org-block-begin-line padding
+and CDR represents bottom org-block-begin-line padding")
+
+(defvar org-padding-block-end-line-padding '(nil . nil)
+  "A pair where CAR represents top org-block-end-line padding
+and CDR represents bottom org-block-end-line padding")
+
+(defun org-padding--set-padding (point padding)
+  (let ((point* (1+ point)))
+    (put-text-property point point* 'rear-nonsticky t)
+    (put-text-property point point* 'line-height (car padding))
+    (put-text-property point point* 'line-spacing (cdr padding))))
+
+(defun org-padding--remove-padding (point)
+  (remove-text-properties point (1+ point) '(rear-nonsticky nil line-height nil line-spacing nil)))
+
 (define-minor-mode org-padding-mode
   "Padding for org-mode"
   nil nil nil
   (let* ((keyword
           `((".*\\($\\)"
-             (1 (progn
-                  (unless (= (match-end 1) (point-max))
-                    (remove-text-properties (match-beginning 1) (1+ (match-end 1)) '(line-height nil line-spacing nil)))
+             (1 (let ((point (match-beginning 1)))
+                  (unless (= point (point-max))
+                    (org-padding--remove-padding point))
                   nil)))
             ("^\\(\\*+\\) .+\\($\\)"
              (2 (let* ((level (- (match-end 1) (match-beginning 1)))
-                       (start (match-beginning 2))
-                       (end (1+ (match-end 2)))
-                       (pair (nth (1- level) org-padding-heading-padding-alist)))
-                  (put-text-property start end 'rear-nonsticky t)
-                  (put-text-property start end 'line-height (car pair))
-                  (put-text-property start end 'line-spacing (cdr pair))
+                       (point (match-beginning 2))
+                       (padding (nth (1- level) org-padding-heading-padding-alist)))
+                  (org-padding--set-padding point padding)
+                  nil)))
+            ("^[ \t]*#\\(\\+[a-zA-Z]+:?\\| \\|$\\)_[a-zA-Z]+[ \t]*[^ \t\n]*[ \t]*.*\\($\\)"
+             (2 (let* ((line-type (downcase (match-string 1)))
+                       (padding (if (string= "+begin" line-type)
+                                  org-padding-block-begin-line-padding
+                                  org-padding-block-end-line-padding)))
+                  (org-padding--set-padding (match-beginning 2) padding)
                   nil))))))
     (if org-padding-mode
       (progn
