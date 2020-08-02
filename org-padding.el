@@ -23,7 +23,9 @@
 ;;; Code:
 
 (defvar org-padding-heading-padding-alist
-  '((nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil)))
+  '((nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil))
+  "An alist where CAR of an item represents top heading padding
+and CDR of an item represents bottom heading padding")
 
 (define-minor-mode org-padding-mode
   "Padding for org-mode"
