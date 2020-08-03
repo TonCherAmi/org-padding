@@ -22,6 +22,8 @@
 
 ;;; Code:
 
+(require 'cl)
+
 (defvar org-padding-heading-padding-alist
   '((nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil) (nil . nil))
   "An alist where CAR of an item represents top heading padding
@@ -41,8 +43,13 @@ and CDR represents bottom org-block-end-line padding")
     (put-text-property point point* 'line-height (car padding))
     (put-text-property point point* 'line-spacing (cdr padding))))
 
-(defun org-padding--remove-padding (point)
-  (remove-text-properties point (1+ point) '(rear-nonsticky nil line-height nil line-spacing nil)))
+(cl-defun org-padding--remove-padding (point &key (top t) (bottom t))
+  (when top
+    (remove-text-properties point (1+ point) '(line-height nil)))
+  (when bottom
+    (remove-text-properties point (1+ point) '(line-spacing nil)))
+  (when (and top bottom)
+    (remove-text-properties point (1+ point) '(rear-nonsticky nil))))
 
 (define-minor-mode org-padding-mode
   "Padding for org-mode"
@@ -59,6 +66,9 @@ and CDR represents bottom org-block-end-line padding")
                        (padding (nth (1- level) org-padding-heading-padding-alist)))
                   (org-padding--set-padding point padding)
                   nil)))
+            ("^\\*+ .+\\($\\)\n\\*+ "
+             (1 (let ((point (match-beginning 1)))
+                  (org-padding--remove-padding point :top nil :bottom t))))
             ("^[ \t]*#\\(\\+[a-zA-Z]+:?\\| \\|$\\)_[a-zA-Z]+[ \t]*[^ \t\n]*[ \t]*.*\\($\\)"
              (2 (let* ((line-type (downcase (match-string 1)))
                        (padding (if (string= "+begin" line-type)
