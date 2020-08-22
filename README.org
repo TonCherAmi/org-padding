@@ -10,7 +10,7 @@ Alternatively you can just download the archive and manually ~require~ the packa
 ** Configuration
 Padding values can be configured with help of the following variables:
 - ~org-padding-heading-padding-alist~ - controls the heading padding values, it is an alist where each pair
-  (of form ~(TOP-PADDING . BOTTOM-PADDING))~ describes the padding values for the corresponding heading level.
+  (of form ~(TOP-PADDING . BOTTOM-PADDING)~) describes the padding values for the corresponding heading level.
 - ~org-padding-block-begin-line-padding~ - controls the block-begin-line padding e.g. ~#BEGIN_SRC elisp~,
   it is a pair of form ~(TOP-PADDING . BOTTOM-PADDING)~.
 - ~org-padding-block-end-line-padding~ - controls the block-end-line padding e.g. ~#END_SRC~,
