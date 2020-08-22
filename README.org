@@ -1,0 +1,29 @@
+* org-padding
+This package makes it possible to set custom padding for org-mode headings and blocks.
+** Installation
+Using use-package + quelpa:
+ #+BEGIN_SRC elisp
+  (use-package org-padding
+    :quelpa (org-padding :repo "TonCherAmi/org-padding" :fetcher github))
+ #+END_SRC
+Alternatively you can just download the archive and manually ~require~ the package.
+** Configuration
+Padding values can be configured with help of the following variables:
+- ~org-padding-heading-padding-alist~ - controls the heading padding values, it is an alist where each pair
+  (of form ~(TOP-PADDING . BOTTOM-PADDING))~ describes the padding values for the corresponding heading level.
+- ~org-padding-block-begin-line-padding~ - controls the block-begin-line padding e.g. ~#BEGIN_SRC elisp~,
+  it is a pair of form ~(TOP-PADDING . BOTTOM-PADDING)~.
+- ~org-padding-block-end-line-padding~ - controls the block-end-line padding e.g. ~#END_SRC~,
+  it is a pair of form ~(TOP-PADDING . BOTTOM-PADDING)~.
+
+To enable the minor mode:
+ #+BEGIN_SRC elisp
+  (add-hook 'org-mode-hook #'org-padding-mode)
+ #+END_SRC
+*** Example configuration
+ #+BEGIN_SRC elisp
+  (setq org-padding-block-begin-line-padding '(2.0 . nil))
+  (setq org-padding-block-end-line-padding '(nil . 1.0))
+  (setq org-padding-heading-padding-alist
+    '((4.0 . 1.5) (3.0 . 0.5) (3.0 . 0.5) (3.0 . 0.5) (2.5 . 0.5) (2.0 . 0.5) (1.5 . 0.5) (0.5 . 0.5)))
+ #+END_SRC
