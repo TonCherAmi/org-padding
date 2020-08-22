@@ -38,10 +38,11 @@ and CDR represents bottom org-block-begin-line padding")
 and CDR represents bottom org-block-end-line padding")
 
 (defun org-padding--set-padding (point padding)
-  (let ((point* (1+ point)))
-    (put-text-property point point* 'rear-nonsticky t)
-    (put-text-property point point* 'line-height (car padding))
-    (put-text-property point point* 'line-spacing (cdr padding))))
+  (unless (= point (point-max))
+    (let ((point* (1+ point)))
+      (put-text-property point point* 'rear-nonsticky t)
+      (put-text-property point point* 'line-height (car padding))
+      (put-text-property point point* 'line-spacing (cdr padding)))))
 
 (cl-defun org-padding--remove-padding (point &key (top t) (bottom t))
   (when top
