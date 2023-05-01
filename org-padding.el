@@ -74,7 +74,10 @@ and CDR represents bottom org-block-end-line padding")
              (2 (let* ((line-type (downcase (match-string 1)))
                        (padding (if (string= "+begin" line-type)
                                   org-padding-block-begin-line-padding
-                                  org-padding-block-end-line-padding)))
+                                  (if (string= "+end" line-type)
+                                      org-padding-block-end-line-padding
+                                    nil)
+                                  )))
                   (org-padding--set-padding (match-beginning 2) padding)
                   nil))))))
     (if org-padding-mode
